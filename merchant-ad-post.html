@@ -1,0 +1,99 @@
+<!-- File: submit-ad.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Submit Ad - JustAdd</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fffaf3;
+      margin: 0;
+      padding: 2rem;
+    }
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #00000010;
+    }
+    h2 {
+      text-align: center;
+      color: #f97316;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #f97316;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e65f00;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Submit Your Ad</h2>
+    <form id="adForm">
+      <input type="text" placeholder="Campaign Title" required />
+      <textarea placeholder="Ad Description" rows="4" required></textarea>
+      <input type="number" placeholder="Budget (₹)" required />
+      <select required>
+        <option value="">Select Category</option>
+        <option value="App">App</option>
+        <option value="Product">Product</option>
+        <option value="Website">Website</option>
+        <option value="Service">Service</option>
+      </select>
+      <input type="text" placeholder="Target Platform (e.g. Instagram, YouTube)" required />
+      <button type="submit">Submit Ad</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('adForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const [titleInput, descInput, budgetInput, categorySelect, platformInput] = document.querySelectorAll('input, textarea, select');
+      const adData = {
+        title: titleInput.value,
+        description: descInput.value,
+        budget: budgetInput.value,
+        category: categorySelect.value,
+        platform: platformInput.value,
+        postedBy: JSON.parse(localStorage.getItem("justaddUser"))?.email || "unknown"
+      };
+
+      try {
+        const res = await fetch("https://your-glitch-app.glitch.me/ads", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(adData)
+        });
+
+        const result = await res.json();
+        alert(result.message);
+        // Optionally redirect to merchant dashboard
+        window.location.href = "merchant-dashboard.html";
+      } catch (err) {
+        alert("Error submitting ad.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

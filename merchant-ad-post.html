@@ -66,6 +66,7 @@
       e.preventDefault();
 
       const form = e.target;
+
       const adData = {
         title: form.title.value,
         description: form.description.value,
@@ -85,13 +86,19 @@
         });
 
         const result = await res.json();
-        alert(result.message);
-        window.location.href = "merchant-dashboard.html"; // redirect after success
+
+        if (res.ok) {
+          alert(result.message);
+          window.location.href = "merchant-dashboard.html";
+        } else {
+          alert("Failed to submit ad: " + result.message);
+        }
       } catch (err) {
-        alert("Error submitting ad.");
         console.error(err);
+        alert("Error submitting ad.");
       }
     });
   </script>
+
 </body>
 </html>

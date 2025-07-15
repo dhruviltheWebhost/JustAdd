@@ -38,6 +38,7 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #eee;
+      position: relative;
     }
 
     body.dark header {
@@ -57,7 +58,7 @@
 
     nav {
       display: flex;
-      gap: 1.2rem;
+      gap: 1rem;
       align-items: center;
     }
 
@@ -83,6 +84,27 @@
       border: none;
       border-radius: 20px;
       cursor: pointer;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      background: white;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      padding: 1rem;
+      border-top: 1px solid #eee;
     }
 
     .container {
@@ -142,7 +164,6 @@
       margin-top: 2rem;
     }
 
-    /* Custom alert */
     #alertBox {
       position: fixed;
       top: 20px;
@@ -153,6 +174,22 @@
       border-radius: 5px;
       display: none;
       z-index: 999;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+      .hamburger {
+        display: block;
+        color: var(--main-color);
+      }
+
+      nav {
+        display: none;
+      }
+
+      nav.mobile-nav.open {
+        display: flex;
+      }
     }
   </style>
 </head>
@@ -165,7 +202,17 @@
       <img src="justadd-logo.png" alt="Logo">
       <strong>JustAdd</strong>
     </div>
-    <nav>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="#">Dashboard</a>
+      <a href="#">My Tasks</a>
+      <a href="#">Wallet</a>
+      <a href="#">Chat</a>
+      <a href="#">Settings</a>
+      <a href="#">Logout</a>
+      <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+    <nav class="desktop-nav">
       <a href="#">Dashboard</a>
       <a href="#">My Tasks</a>
       <a href="#">Wallet</a>
@@ -213,6 +260,11 @@
   <script>
     function toggleTheme() {
       document.body.classList.toggle('dark');
+    }
+
+    function toggleMenu() {
+      const nav = document.getElementById("mobileNav");
+      nav.classList.toggle("open");
     }
 
     function showAlert(message, duration = 3000) {
@@ -269,7 +321,7 @@
 
               const result = await res.json();
               showAlert(result.message || "Task accepted successfully");
-              loadAcceptedTasks(); // Reload after applying
+              loadAcceptedTasks();
             } catch (err) {
               showAlert("Error accepting task");
               console.error(err);
